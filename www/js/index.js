@@ -1,22 +1,41 @@
-document.getElementById('button_input').addEventListener('click', function(){
-    let textarea = document.getElementById('field_input').value;
-    if(textarea != ""){
-        let testCount = 0;
-        if(localStorage.getItem('test-count') == null){
-            localStorage.setItem('test-count',0);
-            testCount = 0;
-        }
-        else
-            testCount = localStorage.getItem('test-count');
-        localStorage.setItem('test-'+((testCount*1)+1), textarea);
-        localStorage.setItem('test-count' , ((testCount*1)+1));
-        let testCountNumber = (testCount*1)+1;
-        let content = "";
-        for(let a = 1; a<=testCountNumber;a++){
-            content += "<li>"+ localStorage.getItem('test-'+a)+"</li>"
-            ;
-        }
-        document.getElementById('display_list').innerHTML = content;
-        document.getElementById('field_input').value = "";
+(function(){
+  
+  var list = document.querySelector('#list'),
+      form = document.querySelector('form'),
+      item = document.querySelector('#item');
+  
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    list.innerHTML += '<li>' + item.value + '</li>';
+    store();
+    item.value = "";
+  },false)
+  
+  list.addEventListener('click',function(e){
+    var t = e.target;
+    if(t.classList.contains('checked')){
+      t.parentNode.removeChild(t);
+    } else {
+      t.classList.add('checked');
     }
-});
+    store();
+  },false)
+  
+  function store() {
+    window.localStorage.myitems = list.innerHTML;
+  }
+  
+  function getValues() {
+    var storedValues = window.localStorage.myitems;
+    if(!storedValues) {
+      list.innerHTML = '<li>exam sa monday</li>'+
+                       '<li>assignment sa OS</li>'+
+                       '<li>birthday ni kapatid</li>'+
+                       '<li>celebration day tom</li>';
+    }
+    else {
+      list.innerHTML = storedValues;
+    }
+  }
+  getValues();
+})();
